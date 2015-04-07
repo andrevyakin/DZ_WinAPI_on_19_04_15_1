@@ -5,10 +5,17 @@
 #include<Windows.h>
 #include<tchar.h>
 
+#define ID_LISTBOX1 1001
+#define ID_LISTBOX2 1002
+#define ID_BUTTON1 1010
+
 static TCHAR WindowsClass[] = L"win32app";
 static TCHAR Title[] = L"MyApp";
 HINSTANCE hinst;
 RECT desktop;
+RECT cr;
+
+HWND list1, list2, button1;
 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
@@ -74,25 +81,68 @@ int WINAPI WinMain(HINSTANCE hinstance,
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+	PAINTSTRUCT ps;
+	HDC hdc;
+
 	switch (message)
 	{
 
 	case WM_COMMAND:
 
 	case BN_CLICKED:
-				
-
+		
 		break;
-
-	case WM_RBUTTONDOWN:
-				
-
+		
 	case WM_CREATE:
+
+		GetClientRect(hWnd, &cr);
+
+		list1 = CreateWindowEx(
+			WS_EX_CLIENTEDGE,
+			L"listbox",
+			L"",
+			WS_CHILD | WS_VISIBLE | LBS_STANDARD | LBS_EXTENDEDSEL | LBS_SORT,
+			cr.right / 5,
+			cr.bottom / 5,
+			cr.right / 5,
+			cr.bottom / 2,
+			hWnd,
+			(HMENU)ID_LISTBOX1,
+			hinst,
+			NULL);
+
+		list2 = CreateWindowEx(
+			WS_EX_CLIENTEDGE,
+			L"listbox",
+			L"",
+			WS_CHILD | WS_VISIBLE | LBS_STANDARD | LBS_EXTENDEDSEL | LBS_SORT,
+			cr.right / 5 * 3,
+			cr.bottom / 5,
+			cr.right / 5,
+			cr.bottom / 2,
+			hWnd,
+			(HMENU)ID_LISTBOX2,
+			hinst,
+			NULL);
+
+		button1 = CreateWindowEx(
+			WS_EX_CLIENTEDGE,
+			L"button",
+			L"Добавить",
+			WS_CHILD | WS_VISIBLE,
+			cr.right / 2 - 8 * 6,
+			cr.bottom - 50,
+			80,
+			30,
+			hWnd,
+			(HMENU)ID_BUTTON1,
+			hinst, NULL);
 				
 		break;
 
 	case WM_PAINT:
-				
+		hdc = BeginPaint(hWnd, &ps);
+		EndPaint(hWnd, &ps);
 		break;
 	case WM_DESTROY:
 		PostQuitMessage(0);
