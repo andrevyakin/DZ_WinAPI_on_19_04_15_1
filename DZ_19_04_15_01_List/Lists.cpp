@@ -12,11 +12,12 @@
 static TCHAR WindowsClass[] = L"win32app";
 static TCHAR Title[] = L"MyApp";
 HINSTANCE hinst;
-RECT desktop;
-RECT cr;
+RECT desktop, cr;
+WORD focus;
 static int numL1 = 1, numL2 = 200;
+wchar_t s[10];
 
-HWND list1, list2, button1, focus;
+HWND list1, list2, button1;
 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
@@ -92,9 +93,21 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	
 	case BN_CLICKED:
 
+		if (LOWORD(wParam) != ID_BUTTON1)
+			focus = LOWORD(wParam);
+		
 		if (LOWORD(wParam) == ID_BUTTON1)
 		{
-			
+			if (focus == ID_LISTBOX1)
+			{
+				_itow_s(numL1++, s, 10);
+				SendMessage(list1, LB_ADDSTRING, 0, (LPARAM)s);
+			}
+			if (focus == ID_LISTBOX2)
+			{
+				_itow_s(numL2++, s, 10);
+				SendMessage(list2, LB_ADDSTRING, 0, (LPARAM)s);
+			}
 		}
 
 		break;
@@ -143,16 +156,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			hWnd,
 			(HMENU)ID_BUTTON1,
 			hinst, NULL);
-
-		wchar_t s1[10];
-		wchar_t s2[10];
+			
 		for (int i = 0; i < 5; i++)
 		{
-			_itow_s(numL1++, s1, 10);
-			_itow_s(numL2++, s2, 10);
-			
-			SendMessage(list1, LB_ADDSTRING, 0, (LPARAM)s1);
-			SendMessage(list2, LB_ADDSTRING, 0, (LPARAM)s2);
+			_itow_s(numL1++, s, 10);
+			SendMessage(list1, LB_ADDSTRING, 0, (LPARAM)s);
+			_itow_s(numL2++, s, 10);
+			SendMessage(list2, LB_ADDSTRING, 0, (LPARAM)s);
 		}
 		SendMessage(list2, LB_ADDSTRING, 0, (LPARAM)L"205");
 		numL2++;
