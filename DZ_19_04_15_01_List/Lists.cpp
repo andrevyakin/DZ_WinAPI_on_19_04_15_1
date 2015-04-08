@@ -14,8 +14,9 @@ static TCHAR Title[] = L"MyApp";
 HINSTANCE hinst;
 RECT desktop;
 RECT cr;
+static int numL1 = 1, numL2 = 200;
 
-HWND list1, list2, button1;
+HWND list1, list2, button1, focus;
 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
@@ -88,9 +89,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	{
 
 	case WM_COMMAND:
-
+	
 	case BN_CLICKED:
-		
+
+		if (LOWORD(wParam) == ID_BUTTON1)
+		{
+			
+		}
+
 		break;
 		
 	case WM_CREATE:
@@ -101,7 +107,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			WS_EX_CLIENTEDGE,
 			L"listbox",
 			L"",
-			WS_CHILD | WS_VISIBLE | LBS_STANDARD | LBS_EXTENDEDSEL | LBS_SORT,
+			WS_CHILD | WS_VISIBLE | LBS_STANDARD | WS_VSCROLL | LBS_SORT,
 			cr.right / 5,
 			cr.bottom / 5,
 			cr.right / 5,
@@ -115,7 +121,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			WS_EX_CLIENTEDGE,
 			L"listbox",
 			L"",
-			WS_CHILD | WS_VISIBLE | LBS_STANDARD | LBS_EXTENDEDSEL | LBS_SORT,
+			WS_CHILD | WS_VISIBLE | LBS_STANDARD | WS_VSCROLL | LBS_SORT,
 			cr.right / 5 * 3,
 			cr.bottom / 5,
 			cr.right / 5,
@@ -137,7 +143,20 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			hWnd,
 			(HMENU)ID_BUTTON1,
 			hinst, NULL);
-				
+
+		wchar_t s1[10];
+		wchar_t s2[10];
+		for (int i = 0; i < 5; i++)
+		{
+			_itow_s(numL1++, s1, 10);
+			_itow_s(numL2++, s2, 10);
+			
+			SendMessage(list1, LB_ADDSTRING, 0, (LPARAM)s1);
+			SendMessage(list2, LB_ADDSTRING, 0, (LPARAM)s2);
+		}
+		SendMessage(list2, LB_ADDSTRING, 0, (LPARAM)L"205");
+		numL2++;
+
 		break;
 
 	case WM_PAINT:
